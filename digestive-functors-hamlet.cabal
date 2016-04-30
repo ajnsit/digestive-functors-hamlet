@@ -1,0 +1,29 @@
+name:                digestive-functors-hamlet
+version:             0.1.0.0
+synopsis:            An example of using digestive functors with hamlet
+description:         An example of using digestive functors with hamlet
+homepage:            https://github.com/ajnsit/digestive-functors-hamlet
+license:             MIT
+license-file:        LICENSE
+author:              Anupam Jain
+maintainer:          ajnsit@gmail.com
+copyright:           2016 Anupam Jain
+category:            Web
+build-type:          Simple
+-- extra-source-files:
+cabal-version:       >=1.10
+
+executable digestive-functors-hamlet-exe
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , text
+                     , shakespeare
+                     , digestive-functors
+                     , digestive-functors-blaze
+                     , digestive-functors-snap
+                     , snap
+                     , snap-blaze
+                     , blaze-html
+  default-language:    Haskell2010
