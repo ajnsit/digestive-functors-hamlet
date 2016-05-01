@@ -64,46 +64,51 @@ releaseForm = Release
 userView :: View Html -> Html
 userView view = [shamlet|
   <label name="name"> Name:
-  ^{inputText "name" view}
+  #{inputText "name" view}
   <br>
 
-  ^{errorList "mail" view}
+  #{errorList "mail" view}
   <label name="mail"> Email address:
-  ^{inputText "mail" view}
+  #{inputText "mail" view}
   <br>
 |]
 
 
-releaseView :: View Html -> Html
-releaseView view = [shamlet|
-  <form name=release action=\ method=POST>
+releaseView :: View Html -> HtmlUrl MyRoute
+releaseView view = [hamlet|
+  <form action=@{HomeR} method=POST>
     <h2>Author
-    ^{userView $ subView "author" view}
+    #{userView $ subView "author" view}
 
     <h2>Package
-    ^{childErrorList "package" view}
+    #{childErrorList "package" view}
 
     <label name="package.name"> Name:
-    ^{inputText "package.name" view}
+    #{inputText "package.name" view}
     <br>
 
     <label name="package.version"> Version:
-    ^{inputText "package.version" view}
+    #{inputText "package.version" view}
     <br>
 
     <label name="package.category"> Category:
-    ^{inputSelect "package.category" view}
+    #{inputSelect "package.category" view}
     <br>
 
-    ^{inputSubmit "Submit"}
+    #{inputSubmit "Submit"}
 |]
 
-releaseReceivedView :: Release -> View Html -> Html
-releaseReceivedView release view = [shamlet|
+releaseReceivedView :: Release -> View Html -> HtmlUrl MyRoute
+releaseReceivedView release view = [hamlet|
   <h1> Release received
   <pre> #{show $ release}
   ^{releaseView view}
 |]
+
+data MyRoute = HomeR
+
+render :: MyRoute -> [(Text, Text)] -> Text
+render HomeR _ = "/"
 
 main :: IO ()
 main = quickHttpServe site
@@ -113,5 +118,5 @@ site = do
   (view, result) <- runForm "release" releaseForm
   let view' = fmap toHtml view
   blaze $ case result of
-    Nothing -> releaseView view'
-    Just release -> releaseReceivedView release view'
+    Nothing -> releaseView view' render
+    Just release -> releaseReceivedView release view' render
